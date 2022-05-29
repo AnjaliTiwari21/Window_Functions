@@ -1,0 +1,27 @@
+These questions are all about grouping your data together.
+
+Lag and Lead
+These functions allow you to examine the next or previous row. You may then compare this value to the current row
+
+Question:
+We are worried our cats are too fat and need to diet.
+We would like to group the cats into quartiles by their weight.
+
+SELECT name, weight, ntile(4) over (order by weight) 
+FROM cats 
+
+--First of each Group
+Question: Cats are vain. Each cat would like to pretend it has the lowest weight for its color. Print cat name, color and the minimum weight of cats with that color.
+
+SELECT name, color, MIN(weight) OVER (partition by color order by weight)
+FROM cats
+order by color, name
+
+--More Row Comparisons
+Question: Each cat would like to see the next heaviest cat's weight when grouped by breed. If there is no heavier cat print 'fattest cat'
+Print a list of cats, their weights and either the next heaviest cat's weight or 'fattest cat'
+
+SELECT name, weight, breed, COALESCE(CAST(LEAD(weight, 1) OVER (partition by breed order by weight) AS varchar), 'fattest cat')
+from cats 
+order by weight
+
