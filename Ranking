@@ -1,1 +1,30 @@
+Ranking can add an ordered number to each of your output rows.The commands used are: rank, row_number, dense_rank, cume_dist, percent_rank
 
+-- Unique Numbers
+Question:
+The cats form a line grouped by color. Inside each color group the cats order themselves by name. 
+Every cat must have a unique number for its place in the line.
+We must assign each cat a unique number while maintaining their color & name ordering.
+
+SELECT ROW_NUMBER() OVER (ORDER BY color, name) AS unique_number, name, color 
+FROM cats 
+
+-- Ordering
+Question: We would like to find the fattest cat. Order all our cats by weight.
+The two heaviest cats should both be 1st. The next heaviest should be 3rd.
+
+SELECT RANK() OVER (ORDER BY weight DESC), weight, name 
+FROM cats 
+ORDER BY rank, name
+
+-- Further Ordering
+For cats age means seniority, we would like to rank the cats by age (oldest first).
+However we would like their ranking to be sequentially increasing.
+
+SELECT DENSE_RANK() OVER (ORDER BY age DESC) as dense_rank, name, age
+FROM cats
+ORDER BY dense_rank, name
+
+--Percentages
+percent_rank()
+cume_dist()
