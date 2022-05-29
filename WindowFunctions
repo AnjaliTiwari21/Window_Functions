@@ -1,0 +1,16 @@
+--Refresher on Aggregates
+1. We would like to find the total weight of cats grouped by age. But only return those groups with a total weight larger than 12.
+select age, sum(weight) as total_weight
+from cats 
+group by age
+having sum(weight)>12
+order by age
+
+
+-- Running Totals (known as Cumulative Totals)
+2. Question: The cats must be ordered by name and will enter an elevator one by one. We would like to know what the running total weight is.
+SELECT name, SUM(weight) OVER (order by name) AS running_total_weight
+FROM cats
+
+--
+
