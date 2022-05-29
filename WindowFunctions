@@ -1,16 +1,45 @@
 --Refresher on Aggregates
 1. We would like to find the total weight of cats grouped by age. But only return those groups with a total weight larger than 12.
-select age, sum(weight) as total_weight
-from cats 
-group by age
-having sum(weight)>12
-order by age
+
+SELECT age, sum(weight) as total_weight
+FROM cats 
+GROUP BY age
+HAVING sum(weight)>12
+ORDER BY age
 
 
 -- Running Totals (known as Cumulative Totals)
 2. Question: The cats must be ordered by name and will enter an elevator one by one. We would like to know what the running total weight is.
+
 SELECT name, SUM(weight) OVER (order by name) AS running_total_weight
 FROM cats
+
+
+--Partitioned Running Totals
+Question: The cats must be ordered first by breed and second by name. They are about to enter an elevator one by one. 
+When all the cats of the same breed have entered they leave. We would like to know what the running total weight of the cats is.
+
+SELECT name, breed, SUM(weight) OVER (PARTITIoN BY breed ORDER BY name) AS running_total_weight
+FROM cats
+
+--Examining nearby rows
+Question: The cats would like to see the average of the weight of them, the cat just after them and the cat just before them.
+The first and last cats are content to have an average weight of consisting of 2 cats not 3.
+
+SELECT name, weight, AVG(weight) OVER (order by weight ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING)
+FROM cats 
+
+Note: Rows allows us to examine the rows before and/or after the current row
+
+--Correct Running Total
+The cats must be ordered by weight descending and will enter an elevator one by one. We would like to know what the running total weight is.
+If two cats have the same weight they must enter separately
+
+SELECT name, weight, SUM(weight) OVER (ORDER BY weight DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_total_weight
+from cats 
+OR
+SELECT name, weight, SUM(weight) OVER (ORDER BY weight DESC ROWS BETWEEN UNBOUNDED PRECEDING AND 0 FOLLOWING) AS running_total_weight
+FROM cats 
 
 --
 
